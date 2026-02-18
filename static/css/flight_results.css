@@ -1,0 +1,147 @@
+   .results-container {
+       max-width: 1100px;
+       margin: 20px auto;
+       padding: 0 15px;
+       font-family: 'Roboto', sans-serif;
+   }
+
+
+   .route-header {
+       background: #fff;
+       padding: 15px;
+       border-radius: 4px;
+       margin-bottom: 20px;
+       box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+       display: flex;
+       justify-content: space-between;
+       align-items: center;
+   }
+
+   .route-title {
+       font-size: 18px;
+       font-weight: 600;
+       color: #212121;
+   }
+
+
+   .flight-card {
+       background: #fff;
+       border: 1px solid #e0e0e0;
+       border-radius: 4px;
+       padding: 25px;
+       margin-bottom: 15px;
+       display: flex;
+       justify-content: space-between;
+       align-items: center;
+       transition: box-shadow 0.2s;
+   }
+
+   .flight-card:hover {
+       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+   }
+
+
+   .airline-info {
+       display: flex;
+       align-items: center;
+       gap: 15px;
+       width: 25%;
+   }
+
+   .airline-logo {
+       width: 40px;
+       height: 40px;
+       object-fit: contain;
+   }
+
+   .airline-name {
+       font-size: 14px;
+       font-weight: 500;
+       color: #212121;
+   }
+
+   .flight-num {
+       font-size: 12px;
+       color: #878787;
+   }
+
+
+   .timing-section {
+       display: flex;
+       align-items: center;
+       gap: 30px;
+       text-align: center;
+       width: 40%;
+   }
+
+   .time-box {
+       font-size: 18px;
+       font-weight: 600;
+       color: #212121;
+   }
+
+   .city-code {
+       font-size: 12px;
+       color: #878787;
+       margin-top: 4px;
+   }
+
+   .duration-line {
+       font-size: 12px;
+       color: #878787;
+       border-bottom: 2px solid #e0e0e0;
+       padding-bottom: 5px;
+       width: 80px;
+       position: relative;
+   }
+
+
+   .price-action {
+       text-align: right;
+       width: 25%;
+   }
+
+   .flight-price {
+       font-size: 22px;
+       font-weight: 700;
+       color: #212121;
+       display: block;
+       margin-bottom: 10px;
+   }
+
+   .book-btn {
+       background-color: #fb641b;
+       color: white;
+       border: none;
+       padding: 10px 25px;
+       font-size: 14px;
+       font-weight: 600;
+       border-radius: 2px;
+       cursor: pointer;
+       text-transform: uppercase;
+       box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .2);
+   }
+
+   .book-btn:hover {
+       background-color: #f4511e;
+   }
+
+
+   @media (max-width: 768px) {
+       .flight-card {
+           flex-direction: column;
+           gap: 20px;
+           text-align: center;
+       }
+
+       .airline-info,
+       .timing-section,
+       .price-action {
+           width: 100%;
+           justify-content: center;
+       }
+
+       .price-action {
+           text-align: center;
+       }
+   }

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div style="padding: 20px; max-width: 1200px; margin: 0 auto;">
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px;">
+        <h2 style="font-size: 20px; margin: 0;">Search Results for "{{ query }}"</h2>
+        
+        <div style="font-size: 14px;">
+            <span style="color: #878787;">Sort By:</span>
+            <a href="?query={{ query }}&sort=l2h" style="margin-left: 10px; text-decoration: none; color: #2874f0; font-weight: 500;">Price: Low to High</a>
+            <span style="color: #e0e0e0; margin: 0 5px;">|</span>
+            <a href="?query={{ query }}&sort=h2l" style="text-decoration: none; color: #2874f0; font-weight: 500;">Price: High to Low</a>
+        </div>
+    </div>
+    
+    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+        {% if products or fashion_items %}
+            
+            {% for product in products %}
+            <div style="width: 230px; background: white; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; border-radius: 4px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                <a href="{% url 'product_detail' product.id %}" style="text-decoration: none; color: inherit;">
+                    <img src="{{ product.image.url }}" style="height: 150px; object-fit: contain; margin-bottom: 10px;">
+                    <h3 style="font-size: 14px; margin: 10px 0; color: #212121; height: 36px; overflow: hidden;">{{ product.name }}</h3>
+                    <p style="font-weight: bold; font-size: 16px; margin: 0;">₹{{ product.price }}</p>
+                </a>
+            </div>
+            {% endfor %}
+
+            {% for item in fashion_items %}
+            <div style="width: 230px; background: white; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; border-radius: 4px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                <a href="{% url 'fashion_detail' item.id %}" style="text-decoration: none; color: inherit;">
+                    <img src="{{ item.image.url }}" style="height: 150px; object-fit: contain; margin-bottom: 10px;">
+                    <h3 style="font-size: 14px; margin: 10px 0; color: #212121; height: 36px; overflow: hidden;">{{ item.brand }} - {{ item.name }}</h3>
+                    <p style="font-weight: bold; font-size: 16px; margin: 0;">₹{{ item.base_price }}</p>
+                </a>
+            </div>
+            {% endfor %}
+
+        {% else %}
+            <div style="width: 100%; text-align: center; padding: 50px;">
+                <img src="https://static-assets-web.flixcart.com/www/linchpin/fk-cp-zion/img/error-no-search-results_2353c5.png" style="width: 200px; margin-bottom: 20px;">
+                <p style="font-size: 18px; color: #212121;">No products found matching your search.</p>
+                <p style="color: #878787;">Check your spelling or try searching for something else.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

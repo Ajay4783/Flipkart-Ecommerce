@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+
+
+<div class="profile-container">
+    <div class="sidebar">
+        <img src="{% static 'assets/user.png' %}" class="profile-img" alt="User">
+        <div class="user-hello">Hello,</div>
+        <div style="font-size: 18px; font-weight: 600;">{{ user.username }}</div>
+    </div>
+
+    <div class="main-content">
+        <h2 style="margin-bottom: 30px;">Personal Information</h2>
+
+        {% if messages %}
+            {% for message in messages %}
+            <p style="color: green; margin-bottom: 15px;">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label class="form-label">First Name</label>
+                <input type="text" name="first_name" class="form-control" value="{{ user.first_name }}">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Last Name</label>
+                <input type="text" name="last_name" class="form-control" value="{{ user.last_name }}">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" name="email" class="form-control" value="{{ user.email }}">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Mobile Number</label>
+                <input type="text" name="mobile" class="form-control" value="{{ p_form.instance.mobile|default:'' }}" placeholder="Enter Mobile Number">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Address</label>
+                <textarea name="address" class="form-control" rows="3" placeholder="Enter Full Address">{{ p_form.instance.address|default:'' }}</textarea>
+            </div>
+
+            <button type="submit" class="save-btn">SAVE CHANGES</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

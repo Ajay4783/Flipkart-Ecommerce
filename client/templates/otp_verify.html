@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/otp_verify.css' %}">
+
+<div class="otp-container">
+    <h2 style="color: #212121; margin-bottom: 10px;">Verify OTP</h2>
+    <p style="color: #878787; font-size: 14px; margin-top: 0;">
+        Please enter the OTP sent to your email.
+    </p>
+    
+    <form method="POST">
+        {% csrf_token %}
+        
+        {% if messages %}
+            {% for message in messages %}
+            <p style="color: {% if message.tags == 'success' %}green{% else %}red{% endif %}; font-size: 14px; margin-bottom: 5px;">
+                {{ message }}
+            </p>
+            {% endfor %}
+        {% endif %}
+        
+        <input type="number" name="otp" class="otp-input" placeholder="Enter OTP" required autofocus>
+        
+        <button type="submit" class="verify-btn">VERIFY</button>
+    </form>
+
+    <div class="resend-box">
+        Not received your code? 
+        
+        <span id="countdown-timer" class="timer-text">00:30</span>
+        
+        <a href="{% url 'resend_otp' %}" id="resend-link" class="resend-link">Resend code</a>
+    </div>
+</div>
+
+<script src="{% static "js/otp_verify.js" %}"></script>
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/orders.css' %}">
+
+<div class="order-container">
+    <div class="page-title">My Orders</div>
+
+    {% if orders %}
+        {% for order in orders %}
+        <div class="order-card">
+            
+            <div class="order-header">
+                <div class="header-item">
+                    <span>ORDER ID</span>
+                    <strong>#{{ order.id }}</strong>
+                </div>
+                <div class="header-item">
+                    <span>DATE</span>
+                    <strong>{{ order.created_at|date:"M d, Y" }}</strong>
+                </div>
+                <div class="header-item">
+                    <span>TOTAL AMOUNT</span>
+                    <strong>₹{{ order.total_price }}</strong>
+                </div>
+            </div>
+
+            {% for item in order.items.all %}
+            <div class="order-item">
+                
+                {% if item.product %}
+                    <img src="{{ item.product.image.url }}" class="item-img" alt="Product">
+                {% elif item.fashion_item %}
+                    <img src="{{ item.fashion_item.image.url }}" class="item-img" alt="Fashion">
+                {% endif %}
+
+                <div class="item-details">
+                    <div class="item-name">
+                        {% if item.product %}{{ item.product.name }}
+                        {% elif item.fashion_item %}{{ item.fashion_item.name }}
+                        {% endif %}
+                    </div>
+                    <div class="item-qty">Qty: {{ item.quantity }}</div>
+
+                    {% if order.status == 'Cancelled' %}
+                        <div class="cancelled-badge">🚫 Order Cancelled</div>
+                    {% endif %}
+                </div>
+
+                <div class="item-price">₹{{ item.price }}</div>
+            </div>
+            {% endfor %}
+
+            {% if order.status != 'Cancelled' %}
+            <div style="border-bottom: 1px solid #f0f0f0;">
+                <div class="track">
+                    <div class="step active">
+                        <span class="icon"></span>
+                        <span class="text">Order Placed</span>
+                    </div>
+
+                    <div class="step {% if order.status == 'Shipped' or order.status == 'Out for Delivery' or order.status == 'Delivered' %}active{% endif %}">
+                        <span class="icon"></span>
+                        <span class="text">Shipped</span>
+                    </div>
+
+                    <div class="step {% if order.status == 'Out for Delivery' or order.status == 'Delivered' %}active{% endif %}">
+                        <span class="icon"></span>
+                        <span class="text">Out for Delivery</span>
+                    </div>
+
+                    <div class="step {% if order.status == 'Delivered' %}active{% endif %}">
+                        <span class="icon"></span>
+                        <span class="text">Delivered</span>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="order-footer">
+                
+                {% if order.status != 'Cancelled' and order.status != 'Delivered' and order.status != 'Shipped' %}
+                    <a href="{% url 'cancel_order' order.id %}" 
+                       class="cancel-btn" 
+                       onclick="return confirm('Are you sure you want to cancel this order?');">
+                        <i class="fa fa-times-circle"></i> Cancel Order
+                    </a>
+                {% endif %}
+
+                <a href="{% url 'download_invoice' order.id %}" target="_blank" class="invoice-btn">
+                    <i class="fa fa-file-pdf"></i> Download Invoice
+                </a>
+            </div>
+
+        </div>
+        {% endfor %}
+    
+    {% else %}
+        <div class="empty-cart">
+            <img src="https://static-assets-web.flixcart.com/www/linchpin/fk-cp-zion/img/myorders-empty_4b3127.png" height="150">
+            <h3>You have no orders yet!</h3>
+            <a href="{% url 'home' %}" style="display: inline-block; background: #2874f0; color: white; padding: 12px 30px; text-decoration: none; border-radius: 2px; font-weight: 500; margin-top: 15px;">Start Shopping</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/order_summary.css' %}">
+
+<div class="checkout-container">
+    
+    <div class="left-section">
+        
+        <div class="section-box">
+            <span style="color: #878787;">1. LOGIN</span>
+            <span style="font-weight: 600; margin-left: 10px;">{{ request.user.first_name }} {{ request.user.last_name }}</span>
+            <span style="font-size: 14px; margin-left: 5px;">+91 {{ request.user.profile.mobile }}</span>
+        </div>
+
+        <div class="section-header">2. DELIVERY ADDRESS</div>
+        <div class="section-box">
+            <button class="change-btn">CHANGE</button>
+            <div style="font-weight: 600;">{{ request.user.first_name }} {{ request.user.last_name }}</div>
+            <div class="address-text">
+                {% if request.user.profile.address %}
+                    {{ request.user.profile.address }}
+                {% else %}
+                    No Address Added. Please add address in Profile.
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="section-header">3. ORDER SUMMARY</div>
+        <div class="section-box">
+    
+        {% if type == 'cart' %}
+            {% for cart_item in cart_items %}
+                <div class="item-row" style="border-bottom: 1px solid #f0f0f0; padding-bottom: 15px; margin-bottom: 15px;">
+                    {% if cart_item.product %}
+                        <img src="{{ cart_item.product.image.url }}" class="item-img">
+                    {% elif cart_item.fashion_item %}
+                        <img src="{{ cart_item.fashion_item.image.url }}" class="item-img">
+                    {% endif %}
+        
+                    <div style="width: 100%;">
+                        <div class="item-name">
+                            {% if cart_item.product %}{{ cart_item.product.name }}
+                            {% elif cart_item.fashion_item %}{{ cart_item.fashion_item.brand }} - {{ cart_item.fashion_item.name }}
+                            {% endif %}
+                        </div>
+                        <div style="font-size: 14px; color: #878787; margin-bottom: 10px;">Seller: RetailNet</div>
+                        
+                        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                            <div class="item-price">₹{{ cart_item.total_cost }}</div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <a href="{% url 'minus_cart' cart_item.id %}" class="qty-btn" style="width: 28px; height: 28px; border-radius: 50%; border: 1px solid #c2c2c2; display: flex; align-items: center; justify-content: center; text-decoration: none; color: #212121; font-weight: bold;">-</a>
+                                <div style="border: 1px solid #c2c2c2; padding: 3px 15px; background: #fff; font-size: 14px;">{{ cart_item.quantity }}</div>
+                                <a href="{% url 'plus_cart' cart_item.id %}" class="qty-btn" style="width: 28px; height: 28px; border-radius: 50%; border: 1px solid #c2c2c2; display: flex; align-items: center; justify-content: center; text-decoration: none; color: #212121; font-weight: bold;">+</a>
+                            </div>
+                            <a href="{% url 'remove_cart' cart_item.id %}" style="font-size: 14px; font-weight: 600; color: #212121; text-decoration: none; margin-left: 10px;">REMOVE</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+    
+        {% else %}
+            <div class="item-row">
+                {% if item.product %}
+                    <img src="{{ item.product.image.url }}" class="item-img">
+                {% elif item.fashion_item %}
+                    <img src="{{ item.fashion_item.image.url }}" class="item-img">
+                {% endif %}
+                
+                <div style="width: 100%;">
+                    <div class="item-name">
+                        {% if item.product %}{{ item.product.name }}
+                        {% elif item.fashion_item %}{{ item.fashion_item.brand }} - {{ item.fashion_item.name }}
+                        {% endif %}
+                    </div>
+                    <div style="font-size: 14px; color: #878787; margin-bottom: 10px;">Seller: RetailNet</div>
+                    
+                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                        <div class="item-price">₹{{ item.total_cost }}</div>
+
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <a href="{% url 'minus_cart' item.id %}" class="qty-btn" style="width: 28px; height: 28px; border-radius: 50%; border: 1px solid #c2c2c2; display: flex; align-items: center; justify-content: center; text-decoration: none; color: #212121; font-weight: bold;">-</a>
+                            
+                            <div style="border: 1px solid #c2c2c2; padding: 3px 15px; background: #fff; font-size: 14px;">{{ item.quantity }}</div>
+                            
+                            <a href="{% url 'plus_cart' item.id %}" class="qty-btn" style="width: 28px; height: 28px; border-radius: 50%; border: 1px solid #c2c2c2; display: flex; align-items: center; justify-content: center; text-decoration: none; color: #212121; font-weight: bold;">+</a>
+                        </div>
+                        
+                        <a href="{% url 'remove_cart' item.id %}" style="font-size: 14px; font-weight: 600; color: #212121; text-decoration: none; margin-left: 10px;">REMOVE</a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    
+        </div>
+    
+        <div class="footer-action">
+            {% if type == 'cart' %}
+                <a href="{% url 'payment_page' 'cart' 0 %}" class="continue-btn">CONTINUE</a>
+            
+            {% elif item.fashion_item %}
+                <a href="{% url 'payment_page' 'fashion' item.fashion_item.id %}" class="continue-btn">CONTINUE</a>
+
+            {% else %}
+                <a href="{% url 'payment_page' 'buy_now' item.product.id %}" class="continue-btn">CONTINUE</a>
+            {% endif %}
+        </div>
+    
+    </div>
+
+    <div class="right-section">
+        <h3 style="color: #878787; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px; font-size: 16px; margin-top: 0;">PRICE DETAILS</h3>
+        
+        <div class="price-row">
+            <span>Price ({% if type == 'cart' %}{{ cart_items.count }} items{% else %}1 item{% endif %})</span>
+            <span>₹{{ total_price }}</span>
+        </div>
+        
+        <div class="price-row" style="color: #388e3c;">
+            <span>Delivery Charges</span>
+            <span>FREE</span>
+        </div>
+        
+        <div class="price-row total-row">
+            <span>Total Amount</span>
+            <span>₹{{ total_price }}</span>
+        </div>
+
+        <div style="margin-top: 15px; color: #388e3c; font-weight: 500; font-size: 14px;">
+            You will save ₹0 on this order
+        </div>
+    </div>
+
+</div>
+{% endblock %}

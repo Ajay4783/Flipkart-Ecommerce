@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/electronics_list.css' %}">
+
+
+<div class="page-wrapper">
+    <h2 class="main-category-title">Electronics</h2>
+
+    <div class="premium-products-grid">
+        {% for product in products %}
+        <div class="premium-card">
+            <div class="card-header-info">
+                <div class="badge-group">
+                    <span class="premium-label">PREMIUM</span>
+                    <span class="rating-badge">4.5 ★</span>
+                </div>
+                <p class="tagline">Top Rated Selection</p>
+            </div>
+
+            <div class="card-main-content">
+                <div class="text-side">
+                    <a href="{% url 'product_detail' product.id %}" class="item-link">
+                    <h3 class="item-name">{{ product.name }}</h3>
+                    <div class="pricing-row">
+                        <span class="final-price">From ₹{{ product.price }}</span>
+                        <span class="mrp-price">₹{{ product.price|add:"5000" }}</span>
+                    </div>
+                    </a>
+                    
+                    <form action="{% url 'add_to_cart' product.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="cart-btn">
+                            <i class="fas fa-shopping-cart"></i> Add to Cart
+                        </button>
+                    </form>
+                </div>
+
+                <div class="image-side">
+                    <a href="{% url 'product_detail' product.id %}">
+                        {% if product.image %}
+        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+    {% else %}
+        <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg" class="card-img-top" alt="No Image">
+    {% endif %}
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="no-results">Stay tuned! Exciting electronics deals are coming soon.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

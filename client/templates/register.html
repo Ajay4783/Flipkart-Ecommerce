@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/register.css' %}">
+
+<div class="login-row">
+    <div class="login-banner">
+        <div>
+            <h2>Looks like you're new here!</h2>
+            <p>Sign up with your mobile number to get started</p>
+        </div>
+    </div>
+
+    <div class="login-form-box">
+        <form method="POST">
+            {% csrf_token %}
+            
+            {% if form.errors %}
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <p style="color: red; font-size: 12px; margin: 0;">{{ error }}</p>
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
+
+            {% for field in form %}
+            <div class="form-group">
+                {{ field }} 
+            </div>
+            {% endfor %}
+
+            <p style="color: #878787; font-size: 12px; margin-top: 10px;">
+                By continuing, you agree to Flipkart's Terms of Use and Privacy Policy.
+            </p>
+            
+            <button type="submit" class="register-btn">CONTINUE</button>
+        </form>
+
+        <div class="login-link">
+            <a href="{% url 'login' %}">Existing User? Log in</a>
+        </div>
+    </div>
+</div>
+
+
+<script src="{% static "js/register.js" %}"></script>
+{% endblock %}

@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/product_detail.css' %}">
+
+
+<style>
+
+</style>
+
+<div class="detail-container">
+    <div class="left-col">
+        <div class="main-image-box">
+            
+            <a href="{% url 'add_to_wishlist' 'normal' product.id %}" class="wishlist-icon" title="Add to Wishlist">
+                <i class="fa fa-heart"></i>
+            </a>
+
+            <div class="action-btn-wrapper">
+    <button class="simple-share-btn" onclick="nativeShare()" title="Share Product">
+        <i class="fa fa-share-alt"></i>
+    </button>
+</div>
+
+            {% if product.image %}
+                <img src="{{ product.image.url }}" class="img-fluid" alt="{{ product.name }}">
+            {% else %}
+                <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg" class="img-fluid" alt="No Image">
+            {% endif %}
+        </div>
+        
+        <div class="button-group">
+            <a>
+                
+                <button class="btn btn-primary add-cart-btn" data-id="{{ product.id }}" data-type="normal">
+    Add to Cart 🛒
+</button>
+            </a>
+            <a href="{% url 'checkout_summary' product.id %}">
+                <button class="buy-now-btn"><i class="fa fa-bolt"></i> BUY NOW</button>
+            </a>
+        </div>
+    </div>
+
+    
+
+    <div class="right-col">
+        <div class="breadcrumb-nav">
+            Home > {{ product.category.name }} > {{ product.brand }}
+        </div>
+
+        <h1 class="item-title">{{ product.name }}</h1>
+        
+        <div class="rating-box" style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+            <span class="badge-star">{{ avg_rating }} <i class="fa fa-star"></i></span>
+            <span style="color: #878787; font-size: 14px;">{{ review_count }} Ratings</span>
+        </div>
+
+        <div class="price-container">
+            <span class="final-price">₹{{ product.price }}</span>
+            {% if product.old_price %}
+                <span class="mrp-price">₹{{ product.old_price }}</span>
+                <span class="discount-tag">Special Price</span>
+            {% endif %}
+        </div>
+
+        <div style="margin-top: 20px;">
+            <h3 style="font-size: 18px; font-weight: 500;">Specifications</h3>
+            <table class="spec-table">
+                {% for key, value in product.specification.items %}
+                <tr>
+                    <td class="key-name">{{ key }}</td>
+                    <td>{{ value }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div style="margin-top: 20px; border-bottom: 1px solid #f0f0f0; padding-bottom: 20px;">
+            <h3 style="font-size: 18px; font-weight: 500;">Description</h3>
+            <p style="color: #212121; font-size: 14px; line-height: 1.5;">{{ product.description }}</p>
+        </div>
+
+        <div class="rating-review-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 class="heading-title" style="margin:0;">Ratings & Reviews</h3>
+                <button class="btn-rate" type="button" onclick="toggleReviewForm()">Rate Product</button>
+            </div>
+
+            <div class="row" style="margin-bottom: 20px;">
+                <div class="col-md-4 text-center" style="border-right: 1px solid #e0e0e0;">
+                    <div class="big-rating">{{ avg_rating }} <span class="big-star">★</span></div>
+                    <p class="total-count">{{ review_count }} Ratings &<br>{{ review_count }} Reviews</p>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="rating-bar-row">
+                        <span class="rating-num">5 ★</span>
+                        <div class="progress">
+                            <div class="progress-bar-green" style="width: {% widthratio rating_counts.5 review_count 100 %}%"></div>
+                        </div>
+                        <span class="rating-count-small">{{ rating_counts.5 }}</span>
+                    </div>
+
+                    <div class="rating-bar-row">
+                        <span class="rating-num">4 ★</span>
+                        <div class="progress">
+                            <div class="progress-bar-green" style="width: {% widthratio rating_counts.4 review_count 100 %}%"></div>
+                        </div>
+                        <span class="rating-count-small">{{ rating_counts.4 }}</span>
+                    </div>
+
+                    <div class="rating-bar-row">
+                        <span class="rating-num">3 ★</span>
+                        <div class="progress">
+                            <div class="progress-bar-yellow" style="width: {% widthratio rating_counts.3 review_count 100 %}%"></div>
+                        </div>
+                        <span class="rating-count-small">{{ rating_counts.3 }}</span>
+                    </div>
+
+                    <div class="rating-bar-row">
+                        <span class="rating-num">2 ★</span>
+                        <div class="progress">
+                            <div class="progress-bar-orange" style="width: {% widthratio rating_counts.2 review_count 100 %}%"></div>
+                        </div>
+                        <span class="rating-count-small">{{ rating_counts.2 }}</span>
+                    </div>
+
+                    <div class="rating-bar-row">
+                        <span class="rating-num">1 ★</span>
+                        <div class="progress">
+                            <div class="progress-bar-red" style="width: {% widthratio rating_counts.1 review_count 100 %}%"></div>
+                        </div>
+                        <span class="rating-count-small">{{ rating_counts.1 }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="review-form-box" style="display:none; background:#f9f9f9; padding:15px; margin-bottom:20px; border-radius:4px; border:1px solid #e0e0e0;">
+                <h5 style="margin-bottom:10px;">Write a Review</h5>
+                <form action="{% url submit_url product.id %}" method="POST">
+                    {% csrf_token %}
+                    {% include 'alerts.html' %} 
+                    
+                    <label>Rate this product:</label>
+                    <div style="overflow:hidden;">
+                        <div class="rate">
+                            <input type="radio" id="star5" name="rating" value="5" required /><label for="star5" title="5 stars"></label>
+                            <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="4 stars"></label>
+                            <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 stars"></label>
+                            <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 stars"></label>
+                            <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 star"></label>
+                        </div>
+                    </div>
+
+                    <input type="text" class="form-control mb-2" name="subject" placeholder="Review Title (e.g. Good Product)" style="width:100%; padding:8px; margin-bottom:10px; margin-top:10px;">
+                    <textarea name="review" rows="3" class="form-control mb-2" placeholder="Write your description..." style="width:100%; padding:8px; margin-bottom:10px;"></textarea>
+                    
+                    {% if user.is_authenticated %}
+                        <button type="submit" class="btn btn-primary" style="background:#2874f0; color:white; border:none; padding:8px 20px; cursor:pointer; font-weight:bold;">SUBMIT REVIEW</button>
+                    {% else %}
+                        <p>Please <a href="{% url 'login' %}">login</a> to write a review.</p>
+                    {% endif %}
+                </form>
+            </div>
+
+            {% for review in reviews %}
+            <div class="review-card">
+                <div class="review-header">
+                    <div class="badge-star {% if review.rating < 3 %}badge-red{% endif %}">
+                        {{ review.rating }} <i class="fa fa-star"></i>
+                    </div>
+                    <span class="review-title">{{ review.subject }}</span>
+                </div>
+                <p class="review-text">{{ review.review }}</p>
+                <div class="review-footer">
+                    <span style="font-weight:500; color:#212121;">{{ review.user.first_name }} {{ review.user.last_name }}</span>
+                    <i class="fa fa-check-circle check-icon"></i> <span>Certified Buyer</span>
+                    <span>{{ review.updated_at|date:"d M, Y" }}</span>
+                </div>
+            </div>
+            {% empty %}
+                <p style="padding: 20px; color: #878787;">No reviews yet. Be the first to review!</p>
+            {% endfor %}
+
+        </div> 
+    </div> 
+</div>
+
+{% if related_products %}
+<div style="margin-top: 40px; background: #fff; padding: 20px; border: 1px solid #f0f0f0; box-shadow: 0 1px 2px rgba(0,0,0,0.1);">
+    <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 20px; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px;">
+        Similar Products
+    </h3>
+    
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+        {% for item in related_products %}
+        <div style="width: 200px; border: 1px solid #e0e0e0; padding: 15px; text-align: center; transition: 0.3s; border-radius: 4px;" 
+             onmouseover="this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'" 
+             onmouseout="this.style.boxShadow='none'">
+            
+             <a href="{% url 'product_detail' item.id %}" style="text-decoration: none; color: inherit;">
+                 <div style="height: 150px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
+                     {% if item.image %}
+                     <img src="{{ item.image.url }}" style="max-height: 100%; max-width: 100%; object-fit: contain;" alt="{{ item.name }}">
+                     {% else %}
+                     <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg" style="max-height: 100%; max-width: 100%; object-fit: contain;" alt="No Image">
+                    {% endif %}
+                </div>
+                
+                <div style="font-size: 14px; font-weight: 500; color: #212121; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    {{ item.name }}
+                </div>
+                
+                <div style="font-size: 16px; font-weight: 600; color: #212121;">
+                    ₹{{ item.price }}
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<script src="{% static 'js/product_detail.js' %}"></script>
+{% endblock %}

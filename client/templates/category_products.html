@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/category_products.css' %}">
+<div style="width: 100%; display: flex; justify-content: center; background-color: #f0f2f5; padding: 10px 0;">
+    
+    <img src="{% static 'assets/Discount banner.webp' %}" 
+         alt="Mobiles banner" 
+         style="width: 60%; 
+                max-width: 1240px; 
+                height: auto; 
+                display: block; 
+                border-radius: 12px; 
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                margin: 10px auto;">
+                
+</div>
+<div class="page-container">
+    <h2 class="category-title">{{ category.name }}</h2>
+
+    <div class="products-grid">
+        {% for product in products %}
+        <a href="{% url 'product_detail' product.id %}" style="text-decoration: none; color: inherit;">
+        <div class="product-card-stamp">
+            <div class="card-details">
+                <div class="brand-rating">
+                    <span class="brand-name">PREMIUM</span> 
+                    <span class="rating">4.5 ★</span>
+                </div>
+                
+                <p class="tagline">Top Rated Selection</p>
+                <h3 class="product-name">{{ product.name }}</h3>
+                
+                <div class="price-section">
+                    <span class="current-price">From ₹{{ product.price }}</span>
+                    <span class="old-price">₹{{ product.price|add:"10000" }}</span>
+                </div>
+
+                <button class="add-to-cart-btn">
+                    <i class="fa fa-shopping-cart"></i> Add to Cart
+                </button>
+            </div>
+
+            <div class="card-image">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                {% else %}
+                    <img src="https://via.placeholder.com/150" alt="No image">
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <p>No products available.</p>
+    </a>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

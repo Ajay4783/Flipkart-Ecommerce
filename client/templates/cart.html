@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/cart.css' %}">
+
+{% if cart_items %}
+<div class="cart-container">
+    
+    <div class="cart-items-section">
+        <div class="cart-header">My Cart ({{ cart_items.count }})</div>
+
+        {% for item in cart_items %}
+        <div class="cart-item">
+            
+            <div class="item-image">
+                {% if item.product %}
+                    {% if item.product.image %}
+                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                    {% else %}
+                        <img src="https://via.placeholder.com/150" alt="No Image">
+                    {% endif %}
+                
+                {% elif item.fashion_item %}
+                    {% if item.fashion_item.image %}
+                        <img src="{{ item.fashion_item.image.url }}" alt="{{ item.fashion_item.name }}">
+                    {% else %}
+                        <img src="https://via.placeholder.com/150" alt="No Image">
+                    {% endif %}
+                {% endif %}
+            </div>
+
+            <div class="item-details">
+                <a href="#" class="item-title">
+                    {% if item.product %}
+                        {{ item.product.name }}
+                    {% elif item.fashion_item %}
+                        {{ item.fashion_item.brand }} - {{ item.fashion_item.name }}
+                    {% endif %}
+                </a>
+                
+                <div class="item-seller">Seller: RetailNet</div>
+                
+                <div class="item-price-row">
+                    <span class="current-price">
+                        {% if item.product %}
+                            ₹{{ item.product.price }}
+                        {% elif item.fashion_item %}
+                            ₹{{ item.fashion_item.base_price }}
+                        {% endif %}
+                    </span>
+                </div>
+
+                <div class="item-actions">
+                    <a href="{% url 'minus_cart' item.id %}" class="qty-btn">-</a>
+                    <div class="qty-display">{{ item.quantity }}</div>
+                    <a href="{% url 'plus_cart' item.id %}" class="qty-btn">+</a>
+                    
+                    <a href="{% url 'remove_cart' item.id %}" class="remove-btn">REMOVE</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="place-order-box">
+            <a href="{% url 'cart_checkout_summary' %}" style="text-decoration: none;">
+            <button class="place-order-btn">PLACE ORDER</button>
+            </a>
+        </div>
+    </div>
+
+    <div class="price-section">
+        <div class="price-header">PRICE DETAILS</div>
+        <div class="price-body">
+            <div class="price-row">
+                <span>Price ({{ cart_items.count }} items)</span>
+                <span>₹{{ total_price }}</span>
+            </div>
+            <div class="price-row green">
+                <span>Delivery Charges</span>
+                <span>FREE</span>
+            </div>
+            
+            <div class="total-row">
+                <span>Total Amount</span>
+                <span>₹{{ total_price }}</span>
+            </div>
+            
+            <div class="price-row green" style="font-weight: 500;">
+                You will save ₹0 on this order
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% else %}
+<div class="empty-cart">
+    <img src="https://rukminim1.flixcart.com/www/800/800/promos/16/05/2019/d438a32e-765a-4d8b-b4a6-520b560971e8.png" style="width: 250px;">
+    <h3>Your cart is empty!</h3>
+    <p>Add items to it now.</p>
+    <a href="{% url 'home' %}" style="background: #2874f0; color: white; padding: 10px 30px; text-decoration: none; font-weight: 600; display: inline-block; margin-top: 10px;">Shop Now</a>
+</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+
+<div class="login-row">
+    <div class="login-banner">
+        <div>
+            <h2>Login</h2>
+            <p>Get access to your Orders, Wishlist and Recommendations</p>
+        </div>
+    </div>
+
+    <div class="login-form-box">
+        <form method="POST">
+            {% csrf_token %}
+            
+            {% if messages %}
+                {% for message in messages %}
+                <p style="color: red; font-size: 14px;">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+
+            <input type="text" name="username" class="form-control" placeholder="Enter Email / Username" required>
+            <input type="password" name="password" class="form-control" placeholder="Enter Password" required>
+
+            <p style="color: #878787; font-size: 12px;">By continuing, you agree to Flipkart's Terms of Use.</p>
+            
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+        <div style="text-align: right; margin-bottom: 15px;">
+           <a href="{% url 'forgot_password' %}" style="color: #2874f0; text-decoration: none; font-weight: 500; font-size: 14px;">Forgot Password?</a>
+       </div>
+
+        <a href="{% url 'register' %}" class="signup-link">New to Flipkart? Create an account</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/tv_appliances_list.css' %}">
+
+<div class="page-container">
+    <h2 class="category-title">TV & Home Appliances</h2>
+
+    <div class="products-grid">
+        {% for product in items %}
+        <a href="{% url 'product_detail' product.id %}" style="text-decoration: none; color: inherit;">
+            <div class="product-card-stamp">
+                <div class="card-details">
+                    <div class="brand-rating">
+                        <span class="brand-name">{{ product.brand|upper }}</span> 
+                        <span class="rating">4.3 ★</span>
+                    </div>
+                    
+                    <p class="tagline">Biggest Sale of the Year</p>
+                    <h3 class="product-name">{{ product.name }}</h3>
+                    
+                    <div class="price-section">
+                        <span class="current-price">₹{{ product.price }}</span>
+                        {% if product.old_price %}
+                            <span class="old-price">₹{{ product.old_price }}</span>
+                        {% endif %}
+                    </div>
+
+                    <button class="add-to-cart-btn">
+                        <i class="fa fa-shopping-cart"></i> Add to Cart
+                    </button>
+                </div>
+
+                <div class="card-image">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% else %}
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg" alt="No Image">
+                    {% endif %}
+                </div>
+            </div>
+        </a>
+        {% empty %}
+        <p>Currently no TV or Appliances available.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

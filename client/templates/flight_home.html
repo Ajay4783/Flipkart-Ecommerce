@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/flight_home.css' %}">
+
+<div class="flight-hero">
+    <div class="blue-bg"></div> 
+
+    <div class="booking-container">
+        <h3 class="card-title">Get. Set. Travel.</h3>
+        
+        <div class="trip-type">
+            <label class="radio-group">
+                <input type="radio" name="trip" checked>
+                <span class="custom-circle"></span>
+                One Way
+            </label>
+            <label class="radio-group">
+                <input type="radio" name="trip">
+                <span class="custom-circle"></span>
+                Round Trip
+            </label>
+        </div>
+
+        <form action="{% url 'flight_search' %}" method="GET">
+            <div class="search-inputs">
+                
+                <div class="input-wrapper">
+                    <div class="input-group">
+                        <span class="input-label">FROM</span>
+                        <input type="text" name="from" id="fromInput" class="input-field" placeholder="Eg: Chennai" value="Chennai">
+                    </div>
+                </div>
+
+                <div class="swap-btn" onclick="swapValues()" title="Swap Cities">
+                    &#8646;
+                </div>
+
+                <div class="input-wrapper" style="margin-left: 10px;"> <div class="input-group">
+                        <span class="input-label">TO</span>
+                        <input type="text" name="to" id="toInput" class="input-field" placeholder="Eg: Mumbai" value="Mumbai">
+                    </div>
+                </div>
+
+                <div class="input-wrapper">
+                    <div class="input-group">
+                        <span class="input-label">DEPART ON</span>
+                        <input type="date" name="date" class="input-field">
+                    </div>
+                </div>
+
+                <button type="submit" class="search-btn">SEARCH</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="offer-section">
+        <img src="{% static 'assets/Flight.png' %}" class="offer-banner" alt="Flight Offers">
+    </div>
+</div>
+
+<script src="{% static 'js/flight_home.js' %}"></script>
+{% endblock %}

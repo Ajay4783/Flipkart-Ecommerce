@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/flight_results.css' %}">
+
+
+<div class="results-container">
+    <div class="route-header">
+        <span class="route-title">
+            Search Results
+        </span>
+        <span style="color: #878787; font-size: 14px;">Showing {{ flights.count }} Flights</span>
+    </div>
+
+    {% for flight in flights %}
+    <div class="flight-card">
+        
+        <div class="airline-info">
+            {% if flight.image %}
+                <img src="{{ flight.image.url }}" alt="Logo" class="airline-logo">
+            {% else %}
+                <i class="fa fa-plane" style="font-size: 24px; color: #2874f0;"></i>
+            {% endif %}
+            <div>
+                <div class="airline-name">{{ flight.airline }}</div>
+                <div class="flight-num">{{ flight.flight_number }}</div>
+            </div>
+        </div>
+
+        <div class="timing-section">
+            <div>
+                <div class="time-box">{{ flight.departure_time|date:"H:i" }}</div>
+                <div class="city-code">{{ flight.source }}</div>
+            </div>
+
+            <div class="duration-line">
+                {{ flight.duration }}
+                <div style="font-size: 10px; margin-top: 5px;">Non-stop</div>
+            </div>
+
+            <div>
+                <div class="time-box">{{ flight.arrival_time|date:"H:i" }}</div>
+                <div class="city-code">{{ flight.destination }}</div>
+            </div>
+        </div>
+
+        <div class="price-action">
+            <span class="flight-price">₹{{ flight.price }}</span>
+            <button class="book-btn">Book</button>
+        </div>
+
+    </div>
+    {% empty %}
+    <div style="text-align: center; padding: 50px;">
+        <img src="https://img1a.flixcart.com/www/linchpin/fk-cp-zion/img/error-500_f9bbb4.png" width="200">
+        <h3>No flights found for this route.</h3>
+        <p>Try searching for different cities (e.g., Chennai to Mumbai).</p>
+        <a href="{% url 'flight_home' %}" style="color: #2874f0; font-weight: bold;">Go Back</a>
+    </div>
+    {% endfor %}
+
+</div>
+{% endblock %}

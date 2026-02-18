@@ -1,0 +1,90 @@
+{% load static %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+
+<nav class="nav-container">
+    <div class="nav-content">
+        
+        <div class="logo-box">
+            <a href="{% url 'home' %}" class="logo-link">
+                <h1 class="shopkart-logo">ShopKart</h1>
+            </a>
+            <div class="explore-plus">
+                <span>Explore</span>
+                <span class="plus-text">Plus</span>
+                <img src="https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/plus-brand_4ff997.png" class="plus-icon">
+            </div>
+        </div>
+
+        <form action="{% url 'search' %}" method="GET" class="search-form" id="searchForm">
+            <div class="search-wrapper" style="position: relative;"> <input type="text" name="query" id="searchInput" class="search-input" 
+           placeholder="Search for products, brands and more" autocomplete="off">
+    
+    <div id="suggestion-box" class="suggestions-box"></div>
+
+    <button type="button" class="voice-btn" onclick="startVoiceSearch()">
+        <i class="fa fa-microphone" id="micIcon"></i>
+    </button>
+    <button type="submit" class="search-btn">
+        <i class="fa fa-search"></i>
+    </button>
+
+</div>
+        </form>
+
+        <div class="right-menu">
+            
+            <div class="menu-item login-wrapper">
+                {% if user.is_authenticated %}
+                    <div class="user-menu">
+                        <div class="user-trigger">
+                            <i class="fa fa-user-circle mobile-only-icon"></i>
+                            <span class="user-name">Welcome {{ user.username }}</span>
+                            <i class="fa fa-angle-down arrow-icon"></i>
+                        </div>
+                        <div class="user-dropdown">
+                            <a href="{% url 'profile' %}"><i class="fa fa-user-circle-o text-primary"></i> My Profile</a>
+                            <a href="#"><i class="fa fa-bolt text-warning"></i> SuperCoin Zone</a>
+                            <a href="#"><i class="fa fa-plus-square text-primary"></i> Flipkart Plus Zone</a>
+                            <a href="{% url 'my_orders' %}"><i class="fa fa-archive text-primary"></i> Orders</a>
+                            <a href="{% url 'wishlist_page' %}"><i class="fa fa-heart text-primary"></i> Wishlist</a>
+                            <div class="divider"></div>
+                            <a href="{% url 'logout' %}" class="logout-link">
+                                <i class="fa fa-sign-out"></i> Logout
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{% url 'login' %}" class="login-btn">
+                        <i class="fa fa-user-circle mobile-only-icon"></i> <span class="desktop-text">Login</span>
+                    </a>
+                    {% endif %}
+                </div>
+                
+                <div class="menu-item cart-wrapper">
+                    <a href="{% url 'view_cart' %}" class="cart-link">
+                        <div class="cart-icon-box">
+                            <i class="fa fa-shopping-cart"></i>
+                            <div class="cart-badge" id="cart-badge" style="display: {% if cart_count > 0 %}flex{% else %}none{% endif %};">
+                                {{ cart_count }}
+                            </div>
+                        </div>
+                        <span class="cart-text">Cart</span>
+                    </a>
+                </div>
+                
+                <div class="menu-item more-menu">
+                    <span class="dots">⋮</span>
+                <div class="dropdown-more">
+                    <a href="#">Notification</a>
+                    <a href="#">24/7 Customer Care</a>
+                    <a href="#">Advertise</a>
+                    <a href="#">Download App</a>
+                </div>
+            </div>
+
+        </div> 
+    </div>
+</nav>
+<script src="{% static 'js/navbar.js' %}"></script>
+

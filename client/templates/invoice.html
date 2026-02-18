@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Invoice #{{ order.id }}</title>
+    <style type="text/css">
+        body {
+            font-family: Helvetica, sans-serif;
+            font-size: 12px;
+            color: #333;
+        }
+        /* முக்கியம்: xhtml2pdf-ல் அலைன்மென்ட் சரியாக வர Table தான் சிறந்தது */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        td, th {
+            padding: 8px;
+            vertical-align: top;
+        }
+
+        /* Header Styles */
+        .header-table td {
+            text-align: center;
+            padding-bottom: 20px;
+        }
+        .company-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2874f0;
+        }
+
+        /* Address Section Styles */
+        .address-table {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 20px;
+        }
+        .address-heading {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        /* Product Table Styles */
+        .product-table th {
+            background-color: #f8f9fa;
+            color: #333;
+            font-weight: bold;
+            text-align: left;
+            border-bottom: 2px solid #ddd;
+        }
+        .product-table td {
+            border-bottom: 1px solid #eee;
+        }
+        .text-right {
+            text-align: right;
+        }
+
+        /* Total Section Styles */
+        .total-table {
+            margin-top: 20px;
+        }
+        .total-label {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .total-amount {
+            font-weight: bold;
+            font-size: 18px;
+            color: #2874f0;
+        }
+
+        /* Footer Styles */
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 10px;
+            color: #888;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <table class="header-table">
+        <tr>
+            <td>
+                <div class="company-name">ShopKart</div>
+                <div>Original Sales Invoice</div>
+            </td>
+        </tr>
+    </table>
+
+    <table class="address-table">
+        <tr>
+            <td width="60%">
+                <div class="address-heading">BILLED TO:</div>
+                <div>Current User: {{ customer.username|title }}</div>
+                <div>Email: {{ customer.email }}</div>
+                {% if customer.profile.mobile %}
+                <div>Mobile: {{ customer.profile.mobile }}</div>
+                {% endif %}
+                <div style="margin-top: 10px;">
+                    <strong>Shipping Address:</strong><br>
+                    {{ order.address|linebreaksbr }}
+                </div>
+            </td>
+
+            <td width="40%" class="text-right">
+                <div class="address-heading">ORDER DETAILS:</div>
+                <div><strong>Order ID:</strong> #{{ order.id }}</div>
+                <div><strong>Order Date:</strong> {{ order.created_at|date:"F d, Y" }}</div>
+                <div><strong>Order Status:</strong> {{ order.status }}</div>
+            </td>
+        </tr>
+    </table>
+
+    <table class="product-table">
+        <thead>
+            <tr>
+                <th width="10%">#</th>
+                <th width="50%">Item Description</th>
+                <th width="20%" class="text-right">Quantity</th>
+                <th width="20%" class="text-right">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>
+                    {% if item.product %}
+                        <strong>{{ item.product.name }}</strong>
+                        <br><small>{{ item.product.category.name }}</small>
+                    {% elif item.fashion_item %}
+                        <strong>{{ item.fashion_item.name }}</strong>
+                    {% endif %}
+                </td>
+                <td class="text-right">{{ item.quantity }}</td>
+                <td class="text-right">₹ {{ item.price|floatformat:2 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <table class="total-table">
+        <tr>
+            <td width="70%"></td> <td width="30%" class="text-right">
+                <table width="100%">
+                    <tr>
+                        <td class="total-label">Grand Total:</td>
+                        <td class="total-amount">₹ {{ order.total_price|floatformat:2 }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="font-size: 10px; color: #555;">(Inclusive of all taxes)</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <div class="footer">
+        Thank you for shopping with ShopKart! This is a computer-generated invoice.
+    </div>
+
+</body>
+</html>

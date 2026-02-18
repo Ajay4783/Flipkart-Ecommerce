@@ -1,0 +1,305 @@
+footer {
+  background-color: #172337;
+  color: #fff;
+  padding: 25px 0 20px 0;
+  margin-top: auto;
+  font-size: 12px;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 40px 30px 40px;
+  border-bottom: 1px solid #333;
+}
+
+.footer-col {
+  width: 15%;
+  padding: 0 15px;
+}
+
+.footer-col h3 {
+  color: #878787;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+}
+
+.footer-col ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-col ul li {
+  margin-bottom: 8px;
+}
+
+.footer-col ul li a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 12px;
+  transition: color 0.2s;
+}
+
+.footer-col ul li a:hover {
+  color: #2a55e5;
+}
+
+
+.contact-col {
+  width: 25%;
+  border-left: 1px solid #333;
+  padding-left: 20px;
+}
+
+.mail-us {
+  border-left: none;
+}
+
+.registered-office {
+  width: 20%;
+}
+
+.contact-col p {
+  color: #fff;
+  margin-bottom: 10px;
+  line-height: 1.6;
+  font-size: 12px;
+}
+
+.contact-col a {
+  color: #2a55e5;
+  text-decoration: none;
+}
+
+
+.footer-social h3 {
+  margin-top: 15px;
+}
+
+.social-icons {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.social-icons a {
+  color: #fff;
+  font-size: 18px;
+  transition: color 0.2s;
+}
+
+.social-icons a:hover {
+  color: #2a55e5;
+}
+
+
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 15px 40px 15px 40px;
+}
+
+.bottom-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  color: #fff;
+  width: 18%;
+}
+
+
+.bottom-item i {
+  color: gold;
+  font-size: 14px;
+}
+
+.bottom-copyright {
+  width: 20%;
+  text-align: center;
+}
+
+.bottom-copyright p {
+  color: #fff;
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.payment-logos img {
+  height: 20px;
+  width: auto;
+  max-width: 150px;
+  filter: invert(1);
+}
+
+
+@media (min-width: 1400px) {
+
+  .footer-container,
+  .footer-bottom {
+    max-width: 1400px;
+    margin: auto;
+  }
+}
+
+@media (max-width: 1399px) {
+
+  .footer-container {
+    padding: 0 30px 30px;
+  }
+
+  .footer-col {
+    width: 18%;
+  }
+
+  .contact-col {
+    width: 26%;
+  }
+
+  .registered-office {
+    width: 22%;
+  }
+}
+
+@media (max-width: 1199px) {
+
+  .footer-container {
+    flex-wrap: wrap;
+    gap: 20px 0;
+  }
+
+  .footer-col {
+    width: 30%;
+  }
+
+  .contact-col {
+    width: 45%;
+    border-left: none;
+    padding-left: 15px;
+  }
+
+  .footer-bottom {
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .bottom-item {
+    width: 30%;
+    justify-content: center;
+  }
+
+  .bottom-copyright {
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 991px) {
+
+  .footer-container {
+    flex-direction: column;
+    padding: 0 25px 25px;
+  }
+
+  .footer-col,
+  .contact-col,
+  .registered-office {
+    width: 100%;
+    border-left: none;
+    padding-left: 0;
+  }
+
+  .footer-col h3 {
+    margin-top: 20px;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .bottom-item {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 767px) {
+
+  footer {
+    font-size: 11px;
+  }
+
+  .footer-container {
+    padding: 0 15px 20px;
+  }
+
+  .footer-col h3 {
+    font-size: 11px;
+  }
+
+  .footer-col ul li a {
+    font-size: 11px;
+  }
+
+  .contact-col p {
+    font-size: 11px;
+  }
+
+
+  .social-icons {
+    justify-content: flex-start;
+  }
+
+
+  .footer-bottom {
+    padding: 15px;
+  }
+
+  .bottom-item {
+    width: 100%;
+    justify-content: center;
+    font-size: 11px;
+  }
+
+  .bottom-item i {
+    font-size: 13px;
+  }
+
+  .bottom-copyright p {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 575px) {
+
+  .footer-col h3 {
+    font-size: 10px;
+  }
+
+  .footer-col ul li {
+    margin-bottom: 6px;
+  }
+
+  .footer-col ul li a {
+    font-size: 10px;
+  }
+
+  .contact-col p,
+  .bottom-copyright p {
+    font-size: 10px;
+  }
+
+  .social-icons a {
+    font-size: 16px;
+  }
+
+  .bottom-item {
+    gap: 6px;
+  }
+}

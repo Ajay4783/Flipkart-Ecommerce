@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/furniture_list.css' %}">
+
+<div class="furniture-container">
+    <div class="category-header">
+        <h2>Premium Home & Furniture</h2>
+        <p>Transform your living space with top-rated picks</p>
+    </div>
+
+    <div class="furniture-grid">
+        {% for item in items %}
+        <a href="{% url 'product_detail' item.id %}" class="furniture-card">
+            <div class="card-top">
+                <span class="badge">PREMIUM</span>
+                <span class="rating">4.8 ★</span>
+            </div>
+
+            <div class="img-section">
+                {% if item.image %}
+                    <img src="{{ item.image.url }}" alt="{{ item.name }}">
+                {% else %}
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg" alt="No Image">
+                {% endif %}
+            </div>
+            
+            <div class="info-section">
+                <h3 class="product-title">{{ item.name }}</h3>
+                <p class="brand-text">by {{ item.brand }}</p>
+                <div class="price-row">
+                    <span class="price-tag">₹{{ item.price }}</span>
+                    <span class="mrp">₹{{ item.price|add:"2500" }}</span>
+                </div>
+                
+                <button class="add-cart-btn">
+                    <i class="fa fa-shopping-cart"></i> ADD TO CART
+                </button>
+            </div>
+        </a>
+        {% empty %}
+        <p class="no-data">New furniture collection arriving soon!</p>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

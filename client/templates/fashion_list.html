@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/fashion_list.css' %}">
+
+
+<div class="fashion-main-wrapper">
+
+    <div class="section-box">
+        <div class="section-header">
+            <h3>Top Deals on Fashion</h3>
+            <a href="#" class="view-all-btn">VIEW ALL</a>
+        </div>
+        <div class="scroll-container">
+            {% for item in fashion_row_1 %}
+            <a href="{% url 'fashion_detail' item.id %}" class="product-card">
+                <div class="image-box">
+                    {% if item.image %}
+                        <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.name }}">
+                    {% else %}
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg" class="card-img-top" alt="No Image">
+                    {% endif %}
+                </div>
+                <div class="product-info">
+                    <p class="product-name" title="{{ item.name }}">{{ item.name }}</p>
+                    <p class="product-offer">Min. 50% Off</p>
+                    <p class="product-subtext">{{ item.brand }}</p>
+                    <p class="product-price">₹{{ item.base_price }}</p>
+                </div>
+            </a>
+            {% empty %}
+                <p style="padding: 20px;">No products available.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="section-box">
+        <div class="section-header">
+            <h3>Trending Now</h3>
+            <a href="#" class="view-all-btn">VIEW ALL</a>
+        </div>
+        <div class="scroll-container">
+            {% for item in fashion_row_2 %}
+            <a href="{% url 'fashion_detail' item.id %}" class="product-card">
+                <div class="image-box">
+                    {% if item.image %}
+                        <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.name }}">
+                    {% else %}
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg" class="card-img-top" alt="No Image">
+                    {% endif %}
+                </div>
+                <div class="product-info">
+                    <p class="product-name" title="{{ item.name }}">{{ item.name }}</p>
+                    <p class="product-offer">Hot Deal</p>
+                    <p class="product-subtext">{{ item.brand }}</p>
+                    <p class="product-price">₹{{ item.base_price }}</p>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="section-box">
+        <div class="section-header">
+            <h3>New Arrivals</h3>
+            <a href="#" class="view-all-btn">VIEW ALL</a>
+        </div>
+        <div class="scroll-container">
+            {% for item in fashion_row_3 %}
+            <a href="{% url 'fashion_detail' item.id %}" class="product-card">
+                <div class="image-box">
+                    {% if item.image %}
+                        <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.name }}">
+                    {% else %}
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg" class="card-img-top" alt="No Image">
+                    {% endif %}
+                </div>
+                <div class="product-info">
+                    <p class="product-name" title="{{ item.name }}">{{ item.name }}</p>
+                    <p class="product-offer">New Launch</p>
+                    <p class="product-subtext">{{ item.brand }}</p>
+                    <p class="product-price">₹{{ item.base_price }}</p>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

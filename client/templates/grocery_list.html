@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/grocery.css' %}">
+
+
+<div class="grocery-main-wrapper">
+    <div class="grocery-container">
+        <div class="category-header">
+            <div>
+                <h2>Grocery & Essentials</h2>
+                <p style="color: #878787; margin: 5px 0 0 0;">{{ items|length }} Items found</p>
+            </div>
+            <div class="filter-sort">
+                <span style="font-size: 14px; color: #878787;">Sort by: <b>Relevance</b></span>
+            </div>
+        </div>
+
+        <div class="grocery-grid">
+            {% for item in items %}
+            <div class="grocery-card-container" style="position: relative;">
+                <a href="{% url 'product_detail' item.id %}" class="grocery-card">
+                    <span class="g-badge">SAVINGS</span>
+                    
+                    <div class="g-image-box">
+                        {% if item.image %}
+                            <img src="{{ item.image.url }}" alt="{{ item.name }}">
+                        {% else %}
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg" alt="No Image">
+                        {% endif %}
+                    </div>
+                    
+                    <div class="g-info">
+                        <div class="g-brand">{{ item.brand }}</div>
+                        <div class="g-title" title="{{ item.name }}">{{ item.name }}</div>
+                        
+                        <div class="g-price-section">
+                            <span class="g-price">₹{{ item.price }}</span>
+                            {% if item.old_price %}
+                                <span class="g-mrp">₹{{ item.old_price }}</span>
+                                <span class="g-discount">Special Offer</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <form action="{% url 'add_to_cart' item.id %}" method="POST" style="width: 100%;">
+                        {% csrf_token %}
+                        <button type="submit" class="g-add-btn">
+                            <i class="fa fa-shopping-cart"></i> ADD TO CART
+                        </button>
+                    </form>
+                </a>
+            </div>
+            {% empty %}
+            <div style="grid-column: 1/-1; text-align: center; padding: 100px; background: white; border-radius: 8px;">
+                <img src="https://cdn-icons-png.flaticon.com/512/11329/11329060.png" style="width: 100px; opacity: 0.5;">
+                <h3 style="margin-top: 20px; color: #878787;">Oops! No grocery items found.</h3>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

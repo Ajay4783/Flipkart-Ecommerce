@@ -1,0 +1,269 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/category.css' %}">
+
+<div class="category-bar">
+    <div class="category-item">
+    <a href="{% url 'category_products' slug='mobiles-tablets' %}">
+        <img src="{% static 'assets/Iphone2.png' %}" alt="Mobiles icon">
+        <p>Mobiles</p>
+      </a>
+    </div>
+
+    <div class="category-item">
+      <a href="{% url 'fashion_catalog' %}">
+        <img src="{% static 'assets/Fashion.png' %}" alt="Fashion icon">
+        <p>Fashion</p>
+      </a>
+    </div>
+
+    <div class="category-item">
+      <a href="{% url 'electronics_catalog' %}" style="text-decoration: none; color: inherit;">
+        <img src="{% static 'assets/Electronics.png' %}" alt="Electronics icon">
+        <p>Electronics</p>
+      </a>
+    </div>
+
+    <div class="category-item">
+      <a href="{% url 'furniture_catalog' %}" style="text-decoration: none; color: inherit;">
+        <img src="{% static 'assets/home and furniture.png' %}" alt="Home icon" class="home">
+        <p>Home & Furniture</p>
+        </a>
+    </div>
+
+    <a href="{% url 'tv_appliances' %}" class="category-link" style="text-decoration: none; color: inherit;">
+    <div class="category-item">
+        <img src="{% static 'assets/Tv and alliance.png' %}" alt="TV icon">
+        <p>TVs & Appliances</p>
+    </div>
+  </a>
+
+  <a href="{% url 'flight_home' %}" class="category-item-link" style="text-decoration: none; color: inherit;">
+    <div class="category-item">
+        <img src="{% static 'assets/Flight.png' %}" alt="Flight icon">
+        <p>Flights Bookings</p>
+    </div>
+  </a>
+
+  <a href="{% url 'grocery_catalog' %}" class="category-item-link" style="text-decoration: none; color: inherit;">
+    <div class="category-item">
+        <img src="{% static 'assets/Grocery1.webp' %}" alt="Grocery icon">
+        <p>Grocery</p>
+    </div>
+  </a>
+</div>
+
+<div class="banner">
+    <button class="prev">&#10094;</button>
+    <button class="next">&#10095;</button>
+    <div class="banner2">
+        <div class="banner3">
+            <img src="{% static 'assets/Banner4.webp' %}" alt="Slider Banner 4">
+        </div>
+        <div class="banner3">
+            <img src="{% static 'assets/Banner.webp' %}" alt="Slider Banner 1">
+        </div>
+        <div class="banner3">
+            <img src="{% static 'assets/Banner2.webp' %}" alt="Slider Banner 2">
+        </div>
+        <div class="banner3">
+            <img src="{% static 'assets/Banner3.webp' %}" alt="Slider Banner 3">
+        </div>
+        <div class="banner3" id="clone">
+            <img src="{% static 'assets/Banner.webp' %}" alt="Slider Banner Clone">
+        </div>
+    </div>
+</div>
+
+<div class="main-content-row">
+    <div class="top-deals">
+        <h2>Top Deals</h2>
+        <div class="top-deals-container">
+            {% for product in mobile_row %}
+            <a href="{% url 'product_detail' product.id %}" style="text-decoration: none; color: inherit;">
+                <div class="top-deal-item">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% else %}
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg" alt="No Image">
+                    {% endif %}
+                    <p class="product-name">{{ product.name }}</p>
+                    <h4 class="product-price">From ₹{{ product.price }}</h4>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        <button class="scroll-btn">❯</button>
+        <button class="scroll-btn2">❮</button>
+    </div>
+
+    <div class="booking">
+        <a href="{% url 'flight_home' %}">
+            <img src="{% static 'assets/Flight booking banner.webp' %}" alt="Flight Booking Banner">
+        </a>
+    </div>
+</div>
+
+<div class="product-grid-row">
+  <div class="mobile-container">
+    <h2>Top picks of mobiles</h2>
+    <button>&gt;</button>
+    <div class="mobile-items">
+      {% for item in mobile_row|slice:":4" %}
+      <a href="{% url 'product_detail' item.id %}" style="text-decoration: none; color: inherit;">
+          <div class="mobile-item">
+            {% if item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.name }}">
+            {% else %}
+                <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg" alt="No Image">
+            {% endif %}
+            <p class="mobile-name">{{ item.name }}</p>
+            <h4 class="mobile-offer">Min.20% off</h4>
+          </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="fashion-container">
+    <h2>Fashion's Top Deals</h2>
+    <button>&gt;</button>
+    <div class="fashion-items">
+      {% for item in fashion_row|slice:":4" %}
+      <a href="{% url 'fashion_detail' item.id %}" style="text-decoration: none; color: inherit;">
+          <div class="fashion-item">
+            {% if item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.name }}">
+            {% else %}
+                <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg" alt="No Image">
+            {% endif %}
+            <p>{{ item.brand }} - {{ item.name }}</p>
+            <h4>Min.20% off</h4>
+          </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="fashion-img">
+    <img src="{% static 'assets/Fashion img.webp' %}" alt="Fashion Sale Banner">
+  </div>
+</div>
+
+<div class="product-grid-row2">
+  <div class="home-container">
+    <h2>Home Decor & Furnishing</h2>
+    <button>&gt;</button>
+    <div class="home-items">
+      {% for item in furniture_row|slice:":4" %}
+      <a href="{% url 'product_detail' item.id %}" style="text-decoration: none; color: inherit;">
+          <div class="home-item">
+            {% if item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.name }}">
+            {% else %}
+                <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg" alt="No Image">
+            {% endif %}
+            <p class="home-name">{{ item.name }}</p>
+            <h4 class="home-offer">Special offer</h4>
+          </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="gadgets-container">
+    <h2>Best Gadgets & Appliances</h2>
+    <button>&gt;</button>
+    <div class="gadgets-items">
+      {% for item in tv_row|slice:":4" %}
+      <a href="{% url 'product_detail' item.id %}" style="text-decoration: none; color: inherit;">
+          <div class="gadgets-item">
+            {% if item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.name }}">
+            {% else %}
+                <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg" alt="No Image">
+            {% endif %}
+            <p class="home-name">{{ item.name }}</p>
+            <h4 class="home-offer">Trending</h4>
+          </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+
+ <div class="designer-container">
+    <h2>Best Deals on Designer Furniture</h2>
+    <button>&gt;</button>
+    <div class="designer-items">
+      {% for item in furniture_row|slice:"4:8" %}
+      <a href="{% url 'product_detail' item.id %}" style="text-decoration: none; color: inherit;">
+          <div class="designer-item">
+            {% if item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.name }}">
+            {% else %}
+                <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg" alt="No Image">
+            {% endif %}
+            <p class="home-name">{{ item.name }}</p>
+            <h4 class="home-offer">Min.10% Off</h4>
+          </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="product-grid-row3">
+  <div class="foryou-container">
+    <h2>Discounts for you</h2>
+    <button>&gt;</button>
+    <div class="foryou-items">
+      {% for item in grocery_row|slice:":4" %}
+      <a href="{% url 'product_detail' item.id %}" style="text-decoration: none; color: inherit;">
+          <div class="foryou-item">
+            {% if item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.name }}">
+            {% else %}
+                <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg" alt="No Image">
+            {% endif %}
+            <p class="foryou-name">{{ item.name }}</p>
+            <h4 class="foryou-offer">Min.10% Off</h4>
+          </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="today-container">
+    <h2>Today Popular</h2>
+    <button>&gt;</button>
+    <div class="today-items">
+      {% for item in grocery_row|slice:"4:8" %}
+      <a href="{% url 'product_detail' item.id %}" style="text-decoration: none; color: inherit;">
+          <div class="today-item">
+            {% if item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.name }}">
+            {% else %}
+                <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg" alt="No Image">
+            {% endif %}
+            <p class="today-name">{{ item.name }}</p>
+            <h4 class="today-offer">Min.10% Off</h4>
+          </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="foryou-img">
+    <img src="{% static 'assets/For you img.webp' %}" alt="For You Banner">
+  </div>
+</div>
+
+<div id="infinite-container" data-url="{% url 'load_more_products' %}" style="display: flex; flex-wrap: wrap; gap: 15px; margin: 0 20px 30px 20px; justify-content: flex-start;"></div>
+
+<div id="loading-spinner" class="loader-container" style="display: none;">
+    <div class="loader"></div>
+    <p>Loading more deals...</p>
+</div>
+
+{% endblock %}
