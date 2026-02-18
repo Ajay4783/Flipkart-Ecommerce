@@ -539,11 +539,11 @@ def generate_otp():
 
 def send_otp_email(email, otp):
     try:
-        print(f"\n✅✅✅ YOUR OTP IS: {otp} ✅✅✅\n")
+        print(f"\n✅✅✅ YOUR OTP IS: {otp} ✅✅✅\n", flush=True)
         return True 
 
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"❌ Error: {e}", flush=True)
         return False
 
 def register_page(request):
