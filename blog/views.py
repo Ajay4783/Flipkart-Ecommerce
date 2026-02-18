@@ -539,16 +539,11 @@ def generate_otp():
 
 def send_otp_email(email, otp):
     try:
-        send_mail(
-            'Your Verification OTP for ShopKart',
-            f'Your One-Time Password (OTP) is: {otp}',
-            settings.EMAIL_HOST_USER,
-            [email],
-            fail_silently=False,
-        )
-        return True
+        print(f"\n✅✅✅ YOUR OTP IS: {otp} ✅✅✅\n")
+        return True 
+
     except Exception as e:
-        print(f"❌ Email sending failed: {e}")
+        print(f"❌ Error: {e}")
         return False
 
 def register_page(request):
