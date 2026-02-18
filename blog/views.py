@@ -44,10 +44,6 @@ def home(request):
     }
     return render(request, 'category.html', context)
 
-import os
-from django.core.files import File
-from django.http import HttpResponse
-
 def auto_update_images(request):
     if not request.user.is_superuser:
         return HttpResponse("❌ Access Denied!")
@@ -56,29 +52,34 @@ def auto_update_images(request):
     images_dir = os.path.join(base_dir, 'bulk_images')
     count = 0
     updated_list = []
-    all_items = list(Product.objects.filter(image='')) + list(FashionItem.objects.filter(image=''))
+
+    # 1. படம் இல்லாத எல்லா பொருட்களையும் எடுக்கிறோம்
+    products = list(Product.objects.filter(image=''))
+    fashion_items = list(FashionItem.objects.filter(image=''))
+    all_items = products + fashion_items
 
     if os.path.exists(images_dir):
         for root, dirs, files in os.walk(images_dir):
             for filename in files:
                 if filename.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')):
-                    img_name_lower = filename.lower()
+                    # படத்தின் பெயரில் உள்ள .jpg போன்றவற்றை நீக்குகிறோம்
+                    img_clean_name = os.path.splitext(filename)[0].lower()
                     
-                    for item in all_items:
-                        product_name_lower = item.name.lower()
-                        if product_name_lower in img_name_lower:
+                    for item in all_items[:]: # லிஸ்ட் மாறாமல் இருக்க காப்பி எடுக்கிறோம்
+                        p_name = item.name.lower()
+                        if img_clean_name in p_name or p_name in img_clean_name:
                             try:
                                 image_path = os.path.join(root, filename)
                                 with open(image_path, 'rb') as f:
                                     item.image.save(filename, File(f), save=True)
                                     count += 1
                                     updated_list.append(f"✅ Matched: {item.name} <--> {filename}")
-                                    all_items.remove(item) 
+                                    all_items.remove(item)
                                     break
                             except Exception as e:
-                                updated_list.append(f"❌ Error for {filename}: {e}")
+                                updated_list.append(f"❌ Error: {filename} -> {e}")
 
-    return HttpResponse(f"<h1>🎉 Success!</h1><h3>Total Updated: {count}</h3><hr>" + "<br>".join(updated_list))
+    return HttpResponse(f"<h1>🎉 Success!</h1><h3>Total Newly Updated: {count}</h3><hr>" + "<br>".join(updated_list))
 
 
 def load_more_products(request):
