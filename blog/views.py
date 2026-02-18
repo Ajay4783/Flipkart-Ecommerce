@@ -507,12 +507,18 @@ def generate_otp():
     return random.randint(100000, 999999)
 
 def send_otp_email(email, otp):
-    send_mail(
-        'Your Verification OTP for ShopKart',
-        f'Your One-Time Password (OTP) is: {otp}',
-        settings.EMAIL_HOST_USER,
-        [email]
-    )
+    try:
+        send_mail(
+            'Your Verification OTP for ShopKart',
+            f'Your One-Time Password (OTP) is: {otp}',
+            settings.EMAIL_HOST_USER,
+            [email],
+            fail_silently=False,
+        )
+        return True
+    except Exception as e:
+        print(f"❌ Email sending failed: {e}")
+        return False
 
 def register_page(request):
     if request.user.is_authenticated:
@@ -553,14 +559,16 @@ def login_page(request):
 
         if user is not None:
             otp = generate_otp()
-            send_otp_email(user.email, otp)
+            email_sent = send_otp_email(user.email, otp)
             
-            request.session['otp'] = otp
-            request.session['login_user_id'] = user.id
-            request.session['verification_type'] = 'login'
-            
-            messages.info(request, "OTP sent to your email!")
-            return redirect('verify_otp')
+            if email_sent:
+                request.session['otp'] = otp
+                request.session['login_user_id'] = user.id
+                request.session['verification_type'] = 'login'
+                messages.info(request, "OTP sent to your email!")
+                return redirect('verify_otp')
+            else:
+                messages.error(request, "Unable to send OTP. Please check your internet or email settings.")
         else:
             messages.error(request, "Invalid Username/Email or Password.")
     return render(request, 'login.html')
