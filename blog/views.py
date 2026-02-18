@@ -560,14 +560,17 @@ def register_page(request):
         if form.is_valid():
             request.session['register_data'] = form.cleaned_data
             otp = generate_otp()
-            send_otp_email(form.cleaned_data['email'], otp)
-            
-            request.session['otp'] = otp
-            request.session['otp_email'] = form.cleaned_data['email']
-            request.session['verification_type'] = 'register'
-            
-            messages.info(request, "OTP sent to your email!")
-            return redirect('verify_otp')
+            email_sent = send_otp_email(form.cleaned_data['email'], otp)
+            if email_sent:
+                request.session['otp'] = otp
+                request.session['otp_email'] = form.cleaned_data['email']
+                request.session['verification_type'] = 'register'
+                messages.info(request, "OTP sent to your email!")
+                return redirect('verify_otp')
+            else:
+                messages.error(request, "OTP அனுப்ப முடியவில்லை. சர்வர் பிரச்சனையாக இருக்கலாம்.")
+                return redirect('register') 
+
     else:
         form = CustomRegisterForm()
     return render(request, 'register.html', {'form': form})
