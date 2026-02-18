@@ -10,7 +10,7 @@ from blog.models import Product
 
 
 base_dir = os.getcwd()
-images_dir = os.path.join(base_dir, 'bulk_images', 'Grocerry')
+images_dir = os.path.join(base_dir, 'bulk_images', 'Tv and Appliances')
 
 print(f"🚀 Starting update process...")
 print(f"📂 Reading images from: {images_dir}")
