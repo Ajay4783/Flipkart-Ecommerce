@@ -44,38 +44,6 @@ def home(request):
     }
     return render(request, 'category.html', context)
 
-def auto_update_images(request):
-    if not request.user.is_superuser:
-        return HttpResponse("❌ Access Denied!")
-
-    base_dir = os.getcwd()
-    images_dir = os.path.join(base_dir, 'bulk_images')
-    count = 0
-    updated_list = []
-    products = list(Product.objects.filter(image=''))[:5]
-    fashion_items = list(FashionItem.objects.filter(image=''))[:5]
-    all_items = products + fashion_items
-
-    if os.path.exists(images_dir):
-        for root, dirs, files in os.walk(images_dir):
-            for filename in files:
-                if filename.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')):
-                    img_clean_name = os.path.splitext(filename)[0].lower()
-                    
-                    for item in all_items[:]:
-                        if img_clean_name in item.name.lower() or item.name.lower() in img_clean_name:
-                            try:
-                                image_path = os.path.join(root, filename)
-                                with open(image_path, 'rb') as f:
-                                    item.image.save(filename, File(f), save=True)
-                                    count += 1
-                                    updated_list.append(f"✅ {item.name}")
-                                    all_items.remove(item)
-                                    break
-                            except: pass
-    print(f"🎉 Batch Update Finished! Updated: {count}", flush=True)
-
-    return HttpResponse(f"<h1>🚀 Batch Process Finished!</h1><h3>Newly Updated: {count}</h3><p>மீதமுள்ள படங்களுக்கு மீண்டும் இந்த பக்கத்தை Refresh செய்யவும்.</p><hr>" + "<br>".join(updated_list))
 
 
 def load_more_products(request):

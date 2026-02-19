@@ -5,7 +5,6 @@ from django.conf.urls.static import static
 from .views import *
 
 urlpatterns = [
-    path('secret-image-update/', views.auto_update_images, name='auto_update'),
     
     path("", views.home, name="home"),
     path('search/', views.search_products, name='search'),
