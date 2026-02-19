@@ -509,37 +509,40 @@ def generate_otp():
     return random.randint(100000, 999999)
 
 def send_otp_email(email, otp):
+    subject = 'ShopKart Registration OTP'
+    message = f'Hi, your OTP for registration is: {otp}'
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = [email]
+    
     try:
-        print(f"\n✅✅✅ YOUR OTP IS: {otp} ✅✅✅\n", flush=True)
-        return True 
-
+        send_mail(subject, message, email_from, recipient_list)
+        print(f"✅ OTP Sent to {email}")
+        return True
     except Exception as e:
-        print(f"❌ Error: {e}", flush=True)
+        print(f"❌ Error sending email: {e}")
         return False
 
+
 def register_page(request):
-    if request.user.is_authenticated:
-        return redirect('home')
-    
     if request.method == 'POST':
         form = CustomRegisterForm(request.POST)
         if form.is_valid():
-            request.session['register_data'] = form.cleaned_data
+            email = form.cleaned_data['email']
             otp = generate_otp()
-            email_sent = send_otp_email(form.cleaned_data['email'], otp)
+            email_sent = send_otp_email(email, otp)
+            
             if email_sent:
+                request.session['register_data'] = form.cleaned_data
                 request.session['otp'] = otp
-                request.session['otp_email'] = form.cleaned_data['email']
-                request.session['verification_type'] = 'register'
                 messages.info(request, "OTP sent to your email!")
                 return redirect('verify_otp')
             else:
-                messages.error(request, "OTP அனுப்ப முடியவில்லை. சர்வர் பிரச்சனையாக இருக்கலாம்.")
-                return redirect('register') 
-
+                messages.error(request, "Invalid Email! We couldn't deliver OTP to this address.")
+                return render(request, 'register.html', {'form': form})
     else:
         form = CustomRegisterForm()
     return render(request, 'register.html', {'form': form})
+
 
 def login_page(request):
     if request.user.is_authenticated:
@@ -910,94 +913,3 @@ def chatbot_response(request):
         response_text = "You're welcome! Happy Shopping! 🛍️"
 
     return JsonResponse({'response': response_text})
-
-
-
-def bulk_upload_batch(request):
-    if not request.user.is_superuser:
-        return HttpResponse("❌ Access Denied! Login as Admin first.")
-
-    base_dir = settings.BASE_DIR
-    images_dir = os.path.join(base_dir, 'bulk_images')
-
-    if not os.path.exists(images_dir):
-        return HttpResponse("❌ 'bulk_images' folder not found!")
-
-    added_count = 0
-    logs = []
-    BATCH_LIMIT = 5 
-    for root, dirs, files in os.walk(images_dir):
-        if added_count >= BATCH_LIMIT:
-            break
-
-        folder_name = os.path.basename(root).lower()
-        is_fashion = 'fashion' in folder_name
-        category_obj = None
-        if not is_fashion and folder_name != 'bulk_images':
-            category_obj, created = Category.objects.get_or_create(
-                name=folder_name.capitalize(),
-                defaults={'slug': folder_name}
-            )
-
-        for filename in files:
-            if added_count >= BATCH_LIMIT:
-                break
-
-            if filename.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')):
-                product_name = os.path.splitext(filename)[0].replace('_', ' ').replace('-', ' ').title()
-                
-
-                exists = False
-                if is_fashion:
-                    if FashionItem.objects.filter(name=product_name).exists(): exists = True
-                else:
-                    if Product.objects.filter(name=product_name).exists(): exists = True
-                
-                if exists:
-                    continue 
-                image_path = os.path.join(root, filename)
-                try:
-                    if is_fashion:
-                        item = FashionItem(
-                            name=product_name,
-                            brand="Generic",
-                            base_price=random.randint(500, 3000),
-                            available=True,
-                            description=f"New Fashion Item: {product_name}"
-                        )
-                        with open(image_path, 'rb') as f:
-                            item.image.save(filename, File(f), save=True)
-                        logs.append(f"👗 Created: {product_name}")
-                    
-                    elif category_obj:
-                        item = Product(
-                            name=product_name,
-                            category=category_obj,
-                            brand="Generic",
-                            price=random.randint(5000, 50000),
-                            available=True,
-                            description=f"New Product: {product_name}"
-                        )
-                        with open(image_path, 'rb') as f:
-                            item.image.save(filename, File(f), save=True)
-                        logs.append(f"📱 Created: {product_name}")
-
-                    added_count += 1
-                
-                except Exception as e:
-                    logs.append(f"❌ Error: {filename} - {str(e)}")
-
-    if added_count == 0:
-        return HttpResponse("<h1>✅ All Done! No new images found.</h1>")
-    
-    return HttpResponse(f"""
-        <h1>🚀 Batch Finished! Created {added_count} items.</h1>
-        <hr>
-        <pre>{'<br>'.join(logs)}</pre>
-        <hr>
-        <h2 style="color:red;">⚠️ இன்னும் படங்கள் உள்ளன! இந்தப் பக்கத்தை Refresh செய்யவும் (F5).</h2>
-        <script>
-            // 2 வினாடியில் தானாகவே ரீஃப்ரெஷ் ஆகும்
-            setTimeout(function(){{ location.reload(); }}, 2000);
-        </script>
-    """)

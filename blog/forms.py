@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from email_validator import validate_email, EmailNotValidError 
 
+
 class CustomRegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
 
@@ -11,21 +12,20 @@ class CustomRegisterForm(UserCreationForm):
         model = User
         fields = ['username', 'email']
 
-    
     def clean_email(self):
-        email = self.cleaned_data.get('email')
+        email = self.cleaned_data.get('email').lower().strip()
         
         try:
-            
             valid = validate_email(email, check_deliverability=True)
             email = valid.email
-        except EmailNotValidError as e:
-            
-            raise forms.ValidationError("Please enter a valid email address. The domain does not exist.")
-
+        except EmailNotValidError:
+            raise forms.ValidationError("This email domain does not exist. Please use a real email.")
+        
+        if not email.endswith('@gmail.com'):
+            raise forms.ValidationError("Please register using a valid Gmail account only.")
         
         if User.objects.filter(email=email).exists():
-            raise forms.ValidationError("Email is already registered.")
+            raise forms.ValidationError("This email is already registered.")
             
         return email
     

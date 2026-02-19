@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
             btn.innerHTML = '<i class="fa fa-circle-o-notch fa-spin"></i> Adding...';
             btn.disabled = true;
 
-            fetch(`/blog/add-to-cart-ajax/?prod_id=${prodId}&type=${type}`)
+            fetch(`/add-to-cart-ajax/?prod_id=${prodId}&type=${type}`)
             .then(response => response.json())
             .then(data => {
                 btn.innerHTML = originalText;

@@ -7,11 +7,6 @@ from django.views.static import serve
 from django.urls import re_path
 
 urlpatterns = [
-    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
-    re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
-
-    path('upload-batch/', views.bulk_upload_batch, name='upload_batch'),
-    
     path("", views.home, name="home"),
     path('search/', views.search_products, name='search'),
     path('load-more-products/', views.load_more_products, name='load_more_products'),
