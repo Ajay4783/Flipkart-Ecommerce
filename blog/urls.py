@@ -5,6 +5,8 @@ from django.conf.urls.static import static
 from .views import *
 
 urlpatterns = [
+
+    path('upload-batch/', views.bulk_upload_batch, name='upload_batch'),
     
     path("", views.home, name="home"),
     path('search/', views.search_products, name='search'),
